@@ -19,18 +19,24 @@ This semester we continued with this work by taking what we learned in the previ
 ![Version 2 Architecture](/images/HydroV2Architecture.jpg)
 
 ### Mother Nature
+[Github Repository](https://github.com/Olin-Hydro/mother-nature)  
 Mother Nature is our high level controller where all decisions are made. Mother nature generates 24 hour schedules of when operations in the garden should occur, and sends them to the Gardener to execute. Mother nature also checks the latest sensor data and will send immediate commands to the Gardener to adjust conditions as needed.
 
 ### Gardener
+[Github Repository](https://github.com/Olin-Hydro/gardener)  
 The Gardener is a microcontroller that lives on the physical hydroponics garden and is wired to sensors and pumps. The Gardener is responsible for interfacing with pumps and sensors to collect data, turn on actuators (pumps and lights), and send information to our Data API.
 
-### Data API
+### Data API (Hydrangea)
+[Github Repository](https://github.com/Olin-Hydro/hydrangea)  
 The Data API is a simple REST wrapper around a mongo database. This API will be responsible for receiving data from the Gardener and Web-UI, and making it easily accessible. 
 
-### Web-UI
+### Web-UI (Saffron)
+[Github Repository](https://github.com/Olin-Hydro/saffron)  
 The Web-UI is a dashboard for viewing sensor data and adjusting system parameters. This website will begin as an internal tool but we eventually want to open up a portion of it for engagement with the Olin Community.
 
-## Designing for maintainability, scale, transparency and robustness
+## Designing Decisions
+
+A description of the previous automation architecture can be found [here](https://docs.google.com/document/d/1Pc2PLaOh7dCDCJWnpELBCgfNip4MotUVfBgKtQ5LqRU/edit?usp=sharing).
 
 ### Maintainability
 In our first design of this automation system we did not define standard interfaces between our components. This made each service tightly coupled to each other, often requiring changes accross the entire stack when making updates. 
@@ -93,10 +99,10 @@ React: Desire on the team to learn it
 ## Testing
 
 ### Mother Nature
-Mother nature is written using interfaces which allows for robust unit testing. The mockgen library is used which creates mock interfaces where the behavior can be defined within a test. This allows interdependent components to be tested individually by mocking dependencies. This is especially in the http package which allows us to mock any http request in a test.
+Mother nature is written using interfaces which allows for robust unit testing. The mockgen library is used which creates mock interfaces where the behavior can be defined within a test. This allows interdependent components to be tested individually by mocking dependencies ([example](https://github.com/Olin-Hydro/mother-nature/blob/main/tests/main_test.go)). This is especially useful in the http package which allows us to mock any http request in a test ([link](https://github.com/Olin-Hydro/mother-nature/blob/main/mocks/http.go)).
 
 ### Data API
-FastAPI comes with a built in test client which we used for testing the Data API. For testing each route a test database is used, and the collections created in the tests are removed at the end of the testing. 
+FastAPI comes with a built in test client which we used for testing the Data API. For testing each route a test database is used, and the collections created in the tests are removed at the end of the testing. [Testing Example](https://github.com/Olin-Hydro/hydrangea/blob/main/App/server/tests/test_gardens.py)
 
 The other services in our architecture are still in early development and testing procedures are being developed.
 
